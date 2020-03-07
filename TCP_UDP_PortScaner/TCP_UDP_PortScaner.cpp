@@ -131,14 +131,18 @@ void PortKnockingUDP(int firstKnockPort, int secondKnockPort)
 
         dest_addr.sin_port = htons(firstKnockPort);
 
+        int OptVal = 500;
+        int OptLen = sizeof(OptVal);
+
         sendto(my_sock, &buff[0], strlen(&buff[0]), 0, (sockaddr*)&dest_addr, sizeof(dest_addr));
+        setsockopt(my_sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&OptVal, OptLen);
 
         sockaddr_in server_addr;
         int server_addr_size = sizeof(server_addr);
 
         int n = recvfrom(my_sock, &buff[0], sizeof(buff) - 1, 0, (sockaddr*)&server_addr, &server_addr_size);
 
-        Sleep(1000);
+        //Sleep(1000);
 
         if (n == SOCKET_ERROR)
         {
